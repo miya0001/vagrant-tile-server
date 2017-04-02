@@ -8,6 +8,7 @@ packages:
   - apache2-dev
   - autoconf
   - curl
+  - fonts-takao-pgothic
   - gdal-bin
   - git
   - libmapnik-dev
@@ -25,3 +26,5 @@ packages:
 db:
   name: gis
   encoding: UTF-8
+
+font: TakaoPGothic Regular

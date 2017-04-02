@@ -31,6 +31,8 @@ $ cd vagrant-tile-server
 $ vagrant up
 ```
 
+Please wait 15 minutes or so. :)
+
 Then visit:
 
 http://192.168.33.10/map/0/0/0.png
@@ -46,6 +48,10 @@ $ bundle exec rake spec
 
 ## Note
 
-* Default data what is in the `provision/default.osm` is only my hometown. :)
+* Default data in the `provision/default.osm` is only my hometown. :)
 * `openstreetmap-carto` is in the `/usr/local/src/openstreetmap-carto-2.41.0`.
-* You have to add fonts to display multibyte charactors. (I am waiting your pull request.)
+* I guess you have to add fonts to display multibyte charactors in `provision/config.yml`.
+
+## License
+
+MIT

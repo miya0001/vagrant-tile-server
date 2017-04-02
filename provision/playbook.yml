@@ -46,6 +46,15 @@
   - name: Import the default data
     shell: "osm2pgsql --slim -d gis -C 3600 --cache 2048 --hstore -S /usr/local/src/openstreetmap-carto-2.41.0/openstreetmap-carto.style /vagrant/provision/default.osm"
 
+  - name: Add an additional font
+    become: yes
+    replace:
+      dest: /usr/local/src/openstreetmap-carto-2.41.0/style.mss
+      regexp: "\"unifont Medium\";"
+      replace: "\"unifont Medium\", \"{{ font }}\";"
+    notify:
+      - restart-renderd
+
   - name: Generate a Mapnik Stylesheet
     become: yes
     shell: ./get-shapefiles.sh && carto project.mml > style.xml
