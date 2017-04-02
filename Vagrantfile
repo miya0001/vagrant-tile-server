@@ -25,7 +25,10 @@ Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-16.04"
   config.vm.box_check_update = true
 
-  config.vm.hostname = _conf['hostname']
+  if Vagrant.has_plugin?('vagrant-hostsupdater')
+    config.vm.hostname = _conf['hostname']
+  end
+
   config.vm.network :private_network, ip: _conf['ip']
   config.vm.define _conf['hostname'] do |v|
   end

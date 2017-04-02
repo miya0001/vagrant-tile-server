@@ -3,3 +3,4 @@
 /vagrant
 .bundle/
 /vendor
+playbook.retry
