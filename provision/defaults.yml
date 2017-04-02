@@ -1,0 +1,27 @@
+hostname: map.dev
+ip: 192.168.33.10
+
+user: vagrant
+
+packages:
+  - apache2
+  - apache2-dev
+  - autoconf
+  - curl
+  - gdal-bin
+  - git
+  - libmapnik-dev
+  - libtool
+  - mapnik-utils
+  - node-carto
+  - osm2pgsql
+  - postgis
+  - postgresql
+  - postgresql-9.5-postgis-2.2
+  - postgresql-contrib
+  - python-psycopg2
+  - unzip
+
+db:
+  name: gis
+  encoding: UTF-8

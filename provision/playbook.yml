@@ -1,0 +1,181 @@
+- hosts: all
+
+  tasks:
+
+  - name: Install common packages
+    become: yes
+    apt: name={{ item }} state=latest
+    with_items: "{{ packages }}"
+
+  # Setup PostgreSQL
+  - name: Make sure PostgreSQL is running
+    become: yes
+    action: service name=postgresql state=started enabled=true
+
+  - name: "Create a user `{{ ansible_env.USER }}` for PostgreSQL"
+    become: yes
+    become_user: postgres
+    postgresql_user:
+      name: "{{ ansible_env.USER }}"
+
+  - name: Create a database `{{ db.name }}`
+    become: yes
+    become_user: postgres
+    postgresql_db:
+      name: "{{ db.name }}"
+      encoding: "{{ db.encoding }}"
+      owner: "{{ ansible_env.USER }}"
+
+  - name: Run setup PostgreSQL database
+    become: yes
+    become_user: postgres
+    shell: "psql -c \"CREATE EXTENSION IF NOT EXISTS hstore;\" -d gis && psql -c \"CREATE EXTENSION IF NOT EXISTS postgis;\" -d gis"
+
+  - name: Download openstreetmap-carto
+    get_url:
+      url: https://github.com/gravitystorm/openstreetmap-carto/archive/v2.41.0.tar.gz
+      dest: /tmp/v2.41.0.tar.gz
+      mode: 0644
+
+  - name: Unarchive openstreetmap-carto
+    become: yes
+    unarchive:
+      src: /tmp/v2.41.0.tar.gz
+      dest: /usr/local/src
+
+  - name: Import the default data
+    shell: "osm2pgsql --slim -d gis -C 3600 --cache 2048 --hstore -S /usr/local/src/openstreetmap-carto-2.41.0/openstreetmap-carto.style /vagrant/provision/default.osm"
+
+  - name: Generate a Mapnik Stylesheet
+    become: yes
+    shell: ./get-shapefiles.sh && carto project.mml > style.xml
+    args:
+      chdir: /usr/local/src/openstreetmap-carto-2.41.0
+
+  # Installs mod_tile
+  - name: Clone the `mod_tile`
+    become: yes
+    git:
+      repo: https://github.com/openstreetmap/mod_tile.git
+      dest: /usr/local/src/mod_tile
+
+  - name: Compile and Install the `mod_tile`
+    become: yes
+    shell: ./autogen.sh && ./configure && make && make install && make install-mod_tile && ldconfig
+    args:
+      chdir: /usr/local/src/mod_tile
+
+  - name: Setup renderd
+    become: yes
+    replace:
+      dest: /usr/local/etc/renderd.conf
+      regexp: ^plugins_dir=/usr/lib/mapnik/input
+      replace: plugins_dir=/usr/lib/mapnik/3.0/input
+    notify:
+      - restart-renderd
+
+  - name: Setup renderd
+    become: yes
+    replace:
+      dest: /usr/local/etc/renderd.conf
+      regexp: ^XML=.*
+      replace: XML=/usr/local/src/openstreetmap-carto-2.41.0/style.xml
+    notify:
+      - restart-renderd
+
+  - name: Setup renderd
+    become: yes
+    replace:
+      dest: /usr/local/etc/renderd.conf
+      regexp: ^HOST=.*$
+      replace: HOST=localhost
+    notify:
+      - restart-renderd
+
+  - name: Setup renderd
+    become: yes
+    replace:
+      dest: /usr/local/etc/renderd.conf
+      regexp: ^URI=/osm_tiles/
+      replace: URI=/map/
+    notify:
+      - restart-renderd
+
+  - name: Copy `/usr/local/src/mod_tile/debian/renderd.init`
+    become: yes
+    copy:
+      src: /usr/local/src/mod_tile/debian/renderd.init
+      dest: /etc/init.d/renderd
+      mode: 0755
+    notify:
+      - restart-renderd
+
+  - name: Setup renderd init
+    become: yes
+    replace:
+      dest: /etc/init.d/renderd
+      regexp: ^DAEMON=.*
+      replace: DAEMON=/usr/local/bin/$NAME
+    notify:
+      - restart-renderd
+
+  - name: Setup renderd init
+    become: yes
+    replace:
+      dest: /etc/init.d/renderd
+      regexp: ^DAEMON_ARGS=""
+      replace: DAEMON_ARGS="-c /usr/local/etc/renderd.conf"
+    notify:
+      - restart-renderd
+
+  - name: Setup renderd init
+    become: yes
+    replace:
+      dest: /etc/init.d/renderd
+      regexp: ^RUNASUSER=www-data
+      replace: "RUNASUSER={{ ansible_env.USER }}"
+    notify:
+      - restart-renderd
+
+  - name: Create `/var/lib/mod_tile`
+    become: yes
+    file:
+      path: /var/lib/mod_tile
+      owner: "{{ ansible_env.USER }}"
+      group: "{{ ansible_env.USER }}"
+      state: directory
+
+  - name: Make sure renderd is running
+    become: yes
+    action: service name=renderd state=started enabled=true
+
+  # Setup Apache2
+  - name: Make sure apache is running
+    become: yes
+    action: service name=apache2 state=started enabled=true
+
+  - name: Create `/etc/apache2/mods-available/mod_tile.load`
+    become: yes
+    shell: echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" > /etc/apache2/mods-available/mod_tile.load
+
+  - name: Activate `mod_tile`
+    become: yes
+    shell: a2enmod mod_tile
+    notify:
+      - restart-apache
+
+  - name: Place `/etc/apache2/sites-enabled/000-default.conf`
+    become: yes
+    template:
+      src: templates/000-default.conf
+      dest: /etc/apache2/sites-enabled/000-default.conf
+    notify:
+      - restart-apache
+
+  handlers:
+    - name: restart-apache
+      become: yes
+      action: service name=apache2 state=restarted
+    - name: restart-renderd
+      become: yes
+      action: service name=renderd state=restarted
