@@ -31,11 +31,16 @@ $ cd vagrant-tile-server
 $ vagrant up
 ```
 
-Please wait 15 minutes or so. :)
+Please wait 15 minutes or so. :smile:
 
 Then visit:
 
 http://192.168.33.10/map/0/0/0.png
+
+###  Database
+
+* User: vagrant
+* Database Name: gis
 
 ## Automated Testing
 
@@ -46,11 +51,11 @@ $ bundle install --path vendor/bundle
 $ bundle exec rake spec
 ```
 
-## Note
+## Other notes
 
-* Default data in the `provision/default.osm` is only my hometown. :)
+* Default data in the `provision/default.osm` is only my hometown. :smile:
 * `openstreetmap-carto` is in the `/usr/local/src/openstreetmap-carto-2.41.0`.
-* I guess you have to add fonts to display multibyte charactors in `provision/config.yml`.
+* I guess you have to add fonts to display multibyte charactors in `provision/defaults.yml`.
 
 ## License
 

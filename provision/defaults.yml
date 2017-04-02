@@ -1,7 +1,7 @@
 hostname: map.dev
 ip: 192.168.33.10
 
-user: vagrant
+uri: /map/
 
 packages:
   - apache2

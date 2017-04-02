@@ -105,8 +105,8 @@
     become: yes
     replace:
       dest: /usr/local/etc/renderd.conf
-      regexp: ^URI=/osm_tiles/
-      replace: URI=/map/
+      regexp: ^URI=.+
+      replace: URI="{{ uri }}"
     notify:
       - restart-renderd
 
