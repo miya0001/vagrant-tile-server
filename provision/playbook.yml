@@ -106,7 +106,7 @@
     replace:
       dest: /usr/local/etc/renderd.conf
       regexp: ^URI=.+
-      replace: URI="{{ uri }}"
+      replace: "URI={{ uri }}"
     notify:
       - restart-renderd
 
