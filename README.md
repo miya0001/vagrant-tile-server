@@ -34,8 +34,8 @@ $ vagrant up
 
 Please wait 20 minutes or so. :smile:
 
-Tile Server: http://192.168.33.10/map/0/0/0.png
-Kosmtik: http://192.168.33.10:6789/
+* Tile Server: http://192.168.33.10/map/0/0/0.png
+* Kosmtik: http://192.168.33.10:6789/
 
 Default values are in the `provision/defaults.yml`, you can overwrite them with `config.json`.
 
