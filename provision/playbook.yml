@@ -204,10 +204,12 @@
   - name: Place the config for `kosmtic`
     template:
       src: templates/kosmtic.json
-      dest: "{{ ansible_env.HOME }}/.config/kosmtik.json"
+      dest: "{{ ansible_env.HOME }}/.kosmtik.json"
 
   - name: Start `kosmtic` as a server
-    shell: "pm2 start kosmtik -- serve {{ kosmtik.project }} --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.config/kosmtik.json"
+    shell: "pm2 start kosmtik -- serve {{ kosmtik.project }} --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
+    args:
+      chdir: "{{ ansible_env.HOME }}"
 
   handlers:
     - name: restart-apache
