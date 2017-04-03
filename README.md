@@ -8,7 +8,6 @@ A Vagrant based tile server development envirionment.
 
 * Ubuntu 16.04 LTS
 * Mapnik 3.0.x
-* FreeType
 * PostgreSQL 9.5.x
   * PostGIS 2.2
 * Apache 2.4.x
