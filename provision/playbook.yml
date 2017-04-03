@@ -16,7 +16,7 @@
   - name: Download Node.js PPM
     become: yes
     get_url:
-      url: https://deb.nodesource.com/setup_7.x
+      url: https://deb.nodesource.com/setup_6.x
       dest: /tmp/setup.sh
       mode: 0440
   - name: Install Node.js PPM
@@ -28,9 +28,13 @@
   - name: Install npm packages
     become: yes
     npm:
-      name: carto
+      name: "{{ item }}"
       global: yes
       executable: /usr/bin/npm
+    with_items:
+      - carto
+      - kosmtik
+      - pm2
 
   # Setup PostgreSQL
   - name: Make sure PostgreSQL is running
@@ -56,6 +60,7 @@
     become_user: postgres
     shell: "psql -c \"CREATE EXTENSION IF NOT EXISTS hstore;\" -d gis && psql -c \"CREATE EXTENSION IF NOT EXISTS postgis;\" -d gis"
 
+  # OpenStreetMap Carto
   - name: Download & Unarchive openstreetmap-carto
     become: yes
     unarchive:
@@ -64,18 +69,11 @@
       remote_src: true
 
   - name: Import the default data
-    shell: "osm2pgsql --slim -d gis -C 3600 --cache 2048 --hstore -S {{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}/openstreetmap-carto.style {{ osm2pgsql.data }}"
-
-  - name: Add an additional font
-    become: yes
-    replace:
-      dest: "{{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}/style.mss"
-      regexp: "\"unifont Medium\";"
-      replace: "\"unifont Medium\", \"{{ font }}\";"
+    shell: "osm2pgsql --slim -d gis -C 3600 --cache 2048 --hstore -S {{ osm2pgsql.style }} {{ osm2pgsql.data }}"
 
   - name: Generate a Mapnik Stylesheet
     become: yes
-    shell: python ./scripts/get-shapefiles.py && carto project.mml > style.xml
+    shell: ./scripts/get-shapefiles.py && carto project.mml > style.xml
     args:
       chdir: "{{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}"
     notify:
@@ -94,6 +92,7 @@
     args:
       chdir: /usr/local/src/mod_tile
 
+  # renderd
   - name: Setup renderd
     become: yes
     replace:
@@ -200,6 +199,15 @@
       dest: /etc/apache2/sites-enabled/000-default.conf
     notify:
       - restart-apache
+
+  # kosmtic
+  - name: Place the config for `kosmtic`
+    template:
+      src: templates/kosmtic.json
+      dest: "{{ ansible_env.HOME }}/.config/kosmtik.json"
+
+  - name: Start `kosmtic` as a server
+    shell: "pm2 start kosmtik -- serve {{ kosmtik.project }} --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.config/kosmtik.json"
 
   handlers:
     - name: restart-apache

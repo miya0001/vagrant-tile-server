@@ -8,6 +8,9 @@ packages:
   - apache2-dev
   - autoconf
   - curl
+  - fonts-noto-cjk
+  - fonts-noto-hinted
+  - fonts-noto-unhinted
   - gdal-bin
   - git
   - libmapnik-dev
@@ -18,17 +21,26 @@ packages:
   - postgresql
   - postgresql-9.5-postgis-2.2
   - postgresql-contrib
+  - python-pip
   - python-psycopg2
+  - ruby
+  - ttf-unifont
   - unzip
-
-osm2pgsql:
-  data: /vagrant/provision/default.osm
 
 db:
   name: gis
   encoding: UTF-8
 
-font: TakaoPGothic Regular
+osm2pgsql:
+  data: /vagrant/provision/default.osm
+  style: /usr/local/src/openstreetmap-carto-3.1.0/openstreetmap-carto.style
 
 renderd:
-  xml: /usr/local/src/openstreetmap-carto-2.45.1/style.xml
+  xml: /usr/local/src/openstreetmap-carto-3.1.0/style.xml
+
+kosmtik:
+  project: /usr/local/src/openstreetmap-carto-3.1.0/project.mml
+  center:
+    lat: 33.47695002414991
+    lng: 135.77839851379397
+    zoom: 14

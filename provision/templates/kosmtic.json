@@ -1,0 +1,16 @@
+[
+    {
+        "where": "center",
+        "then": [{{ kosmtik.center.lng }}, {{ kosmtik.center.lat }}, {{ kosmtik.center.zoom }}]
+    },
+    {
+        "where": "Layer",
+        "if": {
+            "Datasource.type": "postgis"
+        },
+        "then": {
+            "Datasource.dbname": "{{ db.name }}",
+            "Datasource.user": "{{ ansible_env.USER }}"
+        }
+    }
+]

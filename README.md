@@ -5,14 +5,17 @@ A Vagrant based tile server development envirionment.
 ![](https://www.evernote.com/l/ABWj6z8iV9BN77QoJohC7met9Ra_C-Q-afcB/image.png)
 
 * Ubuntu 16.04 LTS
-* Mapnik
-* PostgreSQL
-  * PostGIS
-* Apache
+* Mapnik 3.0.x
+* FreeType
+* PostgreSQL 9.5.x
+  * PostGIS 2.2
+* Apache 2.4.x
   * tile_module
-* osm2pgsql
-* carto
-* openstreetmap-carto
+* osm2pgsql 0.88.x
+* node 6.x
+  * carto 0.17.x
+  * kosmtik 0.0.15
+* openstreetmap-carto 3.1.0
 
 This vagrant environment is based on following article.
 
@@ -36,7 +39,8 @@ Please wait 15 minutes or so. :smile:
 
 Then visit:
 
-http://192.168.33.10/map/0/0/0.png
+Tile Server: http://192.168.33.10/map/0/0/0.png
+Kosmtik: http://192.168.33.10:6789/
 
 Default values are in the `provision/defaults.yml`, you can overwrite them with `config.json`.
 
