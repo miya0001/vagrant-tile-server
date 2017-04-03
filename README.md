@@ -90,6 +90,7 @@ $ bundle exec rake spec
 ## Other Notes
 
 * Default data in the `provision/default.osm` contains only my hometown in Japan. :smile:
+* If you want to restart kosmtik, execute `pm2 restart kosmtik`.
 
 ## License
 
