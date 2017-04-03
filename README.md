@@ -11,7 +11,7 @@ A Vagrant based tile server development envirionment.
 * Apache
   * tile_module
 * osm2pgsql
-* node-carto
+* carto
 * openstreetmap-carto
 
 This vagrant environment is based on following article.
