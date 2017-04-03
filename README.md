@@ -4,6 +4,7 @@ A Vagrant based tile server development envirionment.
 
 ![](https://www.evernote.com/l/ABWj6z8iV9BN77QoJohC7met9Ra_C-Q-afcB/image.png)
 
+* Ubuntu 16.04 LTS
 * Mapnik
 * PostgreSQL
   * PostGIS
@@ -37,6 +38,8 @@ Then visit:
 
 http://192.168.33.10/map/0/0/0.png
 
+Default values are in the `provision/defaults.yml`, you can overwrite them with `config.json`.
+
 ###  Database
 
 * User: vagrant
@@ -54,8 +57,7 @@ $ bundle exec rake spec
 ## Other notes
 
 * Default data in the `provision/default.osm` is only my hometown. :smile:
-* `openstreetmap-carto` is in the `/usr/local/src/openstreetmap-carto-2.41.0`.
-* I guess you have to add fonts to display multibyte charactors in `provision/defaults.yml`.
+* `openstreetmap-carto` is at the `/usr/local/src/openstreetmap-carto-2.41.0`.
 
 ## License
 
