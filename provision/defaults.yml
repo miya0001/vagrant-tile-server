@@ -33,13 +33,13 @@ db:
 
 osm2pgsql:
   data: /vagrant/provision/default.osm
-  style: /usr/local/src/openstreetmap-carto-3.1.0/openstreetmap-carto.style
+  style: /vagrant/openstreetmap-carto-3.1.0/openstreetmap-carto.style
 
 renderd:
-  xml: /usr/local/src/openstreetmap-carto-3.1.0/style.xml
+  xml: /vagrant/openstreetmap-carto-3.1.0/style.xml
 
 kosmtik:
-  project: /usr/local/src/openstreetmap-carto-3.1.0/project.mml
+  project: /vagrant/openstreetmap-carto-3.1.0/project.mml
   center:
     lat: 33.47695002414991
     lng: 135.77839851379397

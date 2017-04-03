@@ -3,7 +3,7 @@
   vars:
     osm_carto:
       version: 3.1.0
-      path: /usr/local/src
+      path: /vagrant
 
   tasks:
 

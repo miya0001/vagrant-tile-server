@@ -6,4 +6,3 @@
 playbook.retry
 .vagrant
 /openstreetmap-carto-*
-/provision/tmp
