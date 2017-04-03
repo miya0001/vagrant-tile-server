@@ -12,6 +12,26 @@
     apt: name={{ item }} state=latest
     with_items: "{{ packages }}"
 
+  # Node.js
+  - name: Download Node.js PPM
+    become: yes
+    get_url:
+      url: https://deb.nodesource.com/setup_7.x
+      dest: /tmp/setup.sh
+      mode: 0440
+  - name: Install Node.js PPM
+    become: yes
+    shell: bash /tmp/setup.sh
+  - name: Install Node.js
+    become: yes
+    apt: name=nodejs state=latest
+  - name: Install npm packages
+    become: yes
+    npm:
+      name: carto
+      global: yes
+      executable: /usr/bin/npm
+
   # Setup PostgreSQL
   - name: Make sure PostgreSQL is running
     become: yes

@@ -13,7 +13,6 @@ packages:
   - libmapnik-dev
   - libtool
   - mapnik-utils
-  - node-carto
   - osm2pgsql
   - postgis
   - postgresql
