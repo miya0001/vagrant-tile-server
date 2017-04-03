@@ -4,6 +4,8 @@ A Vagrant based tile server development envirionment.
 
 ![](https://www.evernote.com/l/ABWtQwn_tP1Fv5c7ZHEgYLrFgcvySIFdR4IB/image.png)
 
+## What's Installed
+
 * Ubuntu 16.04 LTS
 * Mapnik 3.0.x
 * FreeType
@@ -65,7 +67,7 @@ kosmtik:
     zoom: 14
 ```
 
-### How to import your data
+### How to Import Your Data
 
 If you want to import your data of the OpenStreetMap, edit `config.json` like following.
 
@@ -86,7 +88,7 @@ $ bundle install --path vendor/bundle
 $ bundle exec rake spec
 ```
 
-## Other notes
+## Other Notes
 
 * Default data in the `provision/default.osm` contains only my hometown in Japan. :smile:
 
