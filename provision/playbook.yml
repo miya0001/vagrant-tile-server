@@ -1,5 +1,10 @@
 - hosts: all
 
+  vars:
+    osm_carto:
+      version: 2.45.1
+      path: /usr/local/src
+
   tasks:
 
   - name: Install common packages
@@ -31,35 +36,30 @@
     become_user: postgres
     shell: "psql -c \"CREATE EXTENSION IF NOT EXISTS hstore;\" -d gis && psql -c \"CREATE EXTENSION IF NOT EXISTS postgis;\" -d gis"
 
-  - name: Download openstreetmap-carto
-    get_url:
-      url: https://github.com/gravitystorm/openstreetmap-carto/archive/v2.41.0.tar.gz
-      dest: /tmp/v2.41.0.tar.gz
-      mode: 0644
-
-  - name: Unarchive openstreetmap-carto
+  - name: Download & Unarchive openstreetmap-carto
     become: yes
     unarchive:
-      src: /tmp/v2.41.0.tar.gz
-      dest: /usr/local/src
+      src: "https://github.com/gravitystorm/openstreetmap-carto/archive/v{{ osm_carto.version }}.tar.gz"
+      dest: "{{ osm_carto.path }}"
+      remote_src: true
 
   - name: Import the default data
-    shell: "osm2pgsql --slim -d gis -C 3600 --cache 2048 --hstore -S /usr/local/src/openstreetmap-carto-2.41.0/openstreetmap-carto.style {{ osm2pgsql.data }}"
+    shell: "osm2pgsql --slim -d gis -C 3600 --cache 2048 --hstore -S {{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}/openstreetmap-carto.style {{ osm2pgsql.data }}"
 
   - name: Add an additional font
     become: yes
     replace:
-      dest: /usr/local/src/openstreetmap-carto-2.41.0/style.mss
+      dest: "{{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}/style.mss"
       regexp: "\"unifont Medium\";"
       replace: "\"unifont Medium\", \"{{ font }}\";"
-    notify:
-      - restart-renderd
 
   - name: Generate a Mapnik Stylesheet
     become: yes
     shell: ./get-shapefiles.sh && carto project.mml > style.xml
     args:
-      chdir: /usr/local/src/openstreetmap-carto-2.41.0
+      chdir: "{{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}"
+    notify:
+      - restart-renderd
 
   # Installs mod_tile
   - name: Clone the `mod_tile`
@@ -88,7 +88,7 @@
     replace:
       dest: /usr/local/etc/renderd.conf
       regexp: ^XML=.*
-      replace: XML=/usr/local/src/openstreetmap-carto-2.41.0/style.xml
+      replace: "XML={{ renderd.xml }}"
     notify:
       - restart-renderd
 

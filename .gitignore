@@ -5,3 +5,4 @@
 /vendor
 playbook.retry
 .vagrant
+/openstreetmap-carto-*

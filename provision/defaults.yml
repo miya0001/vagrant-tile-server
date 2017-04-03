@@ -8,7 +8,6 @@ packages:
   - apache2-dev
   - autoconf
   - curl
-  - fonts-takao-pgothic
   - gdal-bin
   - git
   - libmapnik-dev
@@ -31,3 +30,6 @@ db:
   encoding: UTF-8
 
 font: TakaoPGothic Regular
+
+renderd:
+  xml: /usr/local/src/openstreetmap-carto-2.45.1/style.xml
