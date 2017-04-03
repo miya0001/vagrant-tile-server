@@ -37,7 +37,7 @@ Please wait 20 minutes or so. :smile:
 * Tile Server: http://192.168.33.10/map/0/0/0.png
 * Kosmtik: http://192.168.33.10:6789/
 
-Default values are in the `provision/defaults.yml`, you can overwrite them with `config.json`.
+Default values are in the `provision/defaults.yml`, you can overwrite them with `config.yml`.
 
 ###  PostgreSQL Database Account
 
@@ -49,10 +49,10 @@ Default values are in the `provision/defaults.yml`, you can overwrite them with 
 If you want to develop your own carto project, you can do it as follows.
 
 1. Place your own carto project (e.g,`my-carto`) into the same directory with `Vagrantfile`.
-2. Place `config.json` in the same place as above.
+2. Place `config.yml` in the same place as above.
 3. Run `vagrant provision`.
 
-Example of the `config.json` is like following.
+Example of the `config.yml` is like following.
 
 ```
 renderd:
@@ -68,7 +68,7 @@ kosmtik:
 
 ### How to Import Your Data
 
-If you want to import your data of the OpenStreetMap, edit `config.json` like following.
+If you want to import your data of the OpenStreetMap, edit `config.yml` like following.
 
 ```
 osm2pgsql:
@@ -76,7 +76,7 @@ osm2pgsql:
   style: /vagrant/openstreetmap-carto-3.1.0/openstreetmap-carto.style
 ```
 
-For more details, please see `provision/defaults.json`.
+For more details, please see `provision/defaults.yml`.
 
 ## Automated Testing
 
