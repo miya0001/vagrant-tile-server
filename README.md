@@ -46,10 +46,10 @@ Default values are in the `provision/defaults.yml`, you can overwrite them with 
 
 ## Customizing
 
-If you want to develop your own Carto Style, you can cutomize as follows.
+If you want to develop your own carto project, you can do it as follows.
 
-1. Place your own carto project which is named `my-carto` into the same directory with `Vagrantfile`.
-2. Place `config.json` into the same directory with `Vagrantfile`.
+1. Place your own carto project (e.g,`my-carto`) into the same directory with `Vagrantfile`.
+2. Place `config.json` in the same place as above.
 3. Run `vagrant provision`.
 
 Example of the `config.json` is like following.
