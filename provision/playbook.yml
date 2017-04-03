@@ -44,7 +44,7 @@
       dest: /usr/local/src
 
   - name: Import the default data
-    shell: "osm2pgsql --slim -d gis -C 3600 --cache 2048 --hstore -S /usr/local/src/openstreetmap-carto-2.41.0/openstreetmap-carto.style /vagrant/provision/default.osm"
+    shell: "osm2pgsql --slim -d gis -C 3600 --cache 2048 --hstore -S /usr/local/src/openstreetmap-carto-2.41.0/openstreetmap-carto.style {{ osm2pgsql.data }}"
 
   - name: Add an additional font
     become: yes
