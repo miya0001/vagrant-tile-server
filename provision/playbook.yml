@@ -69,7 +69,7 @@
       remote_src: true
 
   - name: Import the default data
-    shell: "osm2pgsql --slim -d gis -C 3600 --cache 2048 --hstore -S {{ osm2pgsql.style }} {{ osm2pgsql.data }}"
+    shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ osm2pgsql.style }} {{ osm2pgsql.data }}"
 
   - name: Generate a Mapnik Stylesheet
     become: yes

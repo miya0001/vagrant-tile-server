@@ -45,7 +45,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider :virtualbox do |vb|
     vb.linked_clone = false
     vb.name = _conf['hostname']
-    vb.memory = 2048
+    vb.memory = _conf['hostname']
     vb.cpus = 2
     vb.customize ['modifyvm', :id, '--ioapic', 'on']
     vb.customize ['modifyvm', :id, '--natdnsproxy1', 'on']

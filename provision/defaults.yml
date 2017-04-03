@@ -1,5 +1,6 @@
 hostname: map.dev
 ip: 192.168.33.10
+memory: 2048
 
 uri: /map/
 
