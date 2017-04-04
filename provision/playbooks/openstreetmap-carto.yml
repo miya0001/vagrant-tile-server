@@ -37,7 +37,7 @@
       - restart-renderd
 
   - name: Start `kosmtic` as a server
-    shell: "pm2 kill && pm2 start kosmtik -- serve {{ project_dir }}/openstreetmap-carto-{{ osm_carto.version }}/project.mml --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
+    shell: "pm2 start kosmtik -- serve {{ project_dir }}/openstreetmap-carto-{{ osm_carto.version }}/project.mml --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
     args:
       chdir: "{{ ansible_env.HOME }}"
 

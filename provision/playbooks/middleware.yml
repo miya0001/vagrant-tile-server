@@ -192,6 +192,11 @@
       src: templates/tilemill.json
       dest: "{{ ansible_env.HOME }}/.tilemill.json"
 
+  - name: Start `kosmtic` as a server
+    shell: "pm2 start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json --name=tilemill"
+    args:
+      chdir: /usr/local/src/tilemill
+
   handlers:
     - name: restart-apache
       become: yes
