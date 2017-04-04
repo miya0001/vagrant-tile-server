@@ -7,3 +7,4 @@ playbook.retry
 .vagrant
 /openstreetmap-carto-*
 /config.yml
+/projects

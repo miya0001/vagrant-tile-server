@@ -4,7 +4,7 @@
   vars:
     osm_carto:
       version: 3.1.0
-      path: /vagrant
+    project_dir: "{{ files_dir }}/project"
 
   tasks:
 
@@ -13,17 +13,17 @@
     become: yes
     unarchive:
       src: "https://github.com/gravitystorm/openstreetmap-carto/archive/v{{ osm_carto.version }}.tar.gz"
-      dest: "{{ osm_carto.path }}"
+      dest: "{{ project_dir }}"
       remote_src: true
 
   - name: Import the default data
-    shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}/openstreetmap-carto.style {{ osm2pgsql.data }}"
+    shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ project_dir }}/openstreetmap-carto-{{ osm_carto.version }}/openstreetmap-carto.style {{ osm2pgsql.data }}"
 
   - name: Generate a Mapnik Stylesheet
     become: yes
     shell: ./scripts/get-shapefiles.py && carto project.mml > style.xml
     args:
-      chdir: "{{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}"
+      chdir: "{{ project_dir }}/openstreetmap-carto-{{ osm_carto.version }}"
     notify:
       - restart-renderd
 
@@ -32,12 +32,12 @@
     replace:
       dest: /usr/local/etc/renderd.conf
       regexp: ^XML=.*
-      replace: "XML={{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}/style.xml"
+      replace: "XML={{ project_dir }}/openstreetmap-carto-{{ osm_carto.version }}/style.xml"
     notify:
       - restart-renderd
 
   - name: Start `kosmtic` as a server
-    shell: "pm2 kill && pm2 start kosmtik -- serve {{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}/project.mml --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
+    shell: "pm2 kill && pm2 start kosmtik -- serve {{ project_dir }}/openstreetmap-carto-{{ osm_carto.version }}/project.mml --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
     args:
       chdir: "{{ ansible_env.HOME }}"
 

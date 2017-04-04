@@ -1,3 +1,14 @@
 ---
+- hosts: all
+
+  tasks:
+
+  - name: Create `/vagrant/projects_dir`
+    file:
+      path: "{{ projects_dir }}"
+      owner: "{{ ansible_env.USER }}"
+      group: "{{ ansible_env.USER }}"
+      state: directory
+
 - include: playbooks/middleware.yml
 - include: playbooks/openstreetmap-carto.yml

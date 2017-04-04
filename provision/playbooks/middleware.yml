@@ -56,25 +56,6 @@
     become_user: postgres
     shell: "psql -c \"CREATE EXTENSION IF NOT EXISTS hstore;\" -d gis && psql -c \"CREATE EXTENSION IF NOT EXISTS postgis;\" -d gis"
 
-  # # OpenStreetMap Carto
-  # - name: Download & Unarchive openstreetmap-carto
-  #   become: yes
-  #   unarchive:
-  #     src: "https://github.com/gravitystorm/openstreetmap-carto/archive/v{{ osm_carto.version }}.tar.gz"
-  #     dest: "{{ osm_carto.path }}"
-  #     remote_src: true
-
-  # - name: Import the default data
-  #   shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ osm2pgsql.style }} {{ osm2pgsql.data }}"
-
-  # - name: Generate a Mapnik Stylesheet
-  #   become: yes
-  #   shell: ./scripts/get-shapefiles.py && carto project.mml > style.xml
-  #   args:
-  #     chdir: "{{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}"
-  #   notify:
-  #     - restart-renderd
-
   # Installs mod_tile
   - name: Clone the `mod_tile`
     become: yes
@@ -97,15 +78,6 @@
       replace: plugins_dir=/usr/lib/mapnik/3.0/input
     notify:
       - restart-renderd
-
-  # - name: Setup renderd
-  #   become: yes
-  #   replace:
-  #     dest: /usr/local/etc/renderd.conf
-  #     regexp: ^XML=.*
-  #     replace: "XML={{ renderd.xml }}"
-  #   notify:
-  #     - restart-renderd
 
   - name: Setup renderd
     become: yes
@@ -202,10 +174,23 @@
       src: templates/kosmtic.json
       dest: "{{ ansible_env.HOME }}/.kosmtik.json"
 
-  # - name: Start `kosmtic` as a server
-  #   shell: "pm2 start kosmtik -- serve {{ kosmtik.project }} --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
-  #   args:
-  #     chdir: "{{ ansible_env.HOME }}"
+  # tilemill
+  - name: Clone the TilMill
+    become: yes
+    git:
+      repo: https://github.com/tilemill-project/tilemill.git
+      dest: /usr/local/src/tilemill
+
+  - name: Install dependencies for the TilMill
+    become: yes
+    shell: npm install
+    args:
+      chdir: /usr/local/src/tilemill
+
+  - name: Place the config for `tilemill`
+    template:
+      src: templates/tilemill.json
+      dest: "{{ ansible_env.HOME }}/.tilemill.json"
 
   handlers:
     - name: restart-apache

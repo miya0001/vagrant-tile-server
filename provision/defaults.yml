@@ -40,3 +40,5 @@ kosmtik:
     lat: 33.47695002414991
     lng: 135.77839851379397
     zoom: 14
+
+files_dir: /vagrant/projects
