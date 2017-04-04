@@ -16,6 +16,7 @@ A Vagrant based tile server development envirionment.
 * node 6.x
   * carto 0.17.x
   * kosmtik 0.0.15
+  * pm2 2.4.x
 * openstreetmap-carto 3.1.0
 
 ### Requires
