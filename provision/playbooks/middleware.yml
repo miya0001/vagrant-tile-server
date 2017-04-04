@@ -31,6 +31,7 @@
       - carto
       - kosmtik
       - pm2
+      - cartocc
 
   # Setup PostgreSQL
   - name: Make sure PostgreSQL is running
@@ -183,3 +184,11 @@
     shell: "pm2 start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json --name=tilemill"
     args:
       chdir: /usr/local/src/tilemill
+
+  handlers:
+    - name: restart-apache
+      become: yes
+      action: service name=apache2 state=restarted
+    - name: restart-renderd
+      become: yes
+      action: service name=renderd state=restarted
