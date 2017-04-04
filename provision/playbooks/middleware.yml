@@ -31,7 +31,7 @@
       - carto
       - kosmtik
       - pm2
-      - cartocc
+      # - cartocc
 
   # Setup PostgreSQL
   - name: Make sure PostgreSQL is running
@@ -182,27 +182,27 @@
       dest: "{{ ansible_env.HOME }}/.kosmtik.json"
 
   # tilemill
-  - name: Clone the TilMill
-    become: yes
-    git:
-      repo: https://github.com/tilemill-project/tilemill.git
-      dest: /usr/local/src/tilemill
-
-  - name: Install dependencies for the TilMill
-    become: yes
-    shell: npm install
-    args:
-      chdir: /usr/local/src/tilemill
-
-  - name: Place the config for the TileMill
-    template:
-      src: templates/tilemill.json
-      dest: "{{ ansible_env.HOME }}/.tilemill.json"
-
-  - name: Start Tilemill as a server
-    shell: "pm2 -f  --name=tilemill start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json"
-    args:
-      chdir: /usr/local/src/tilemill
+  # - name: Clone the TilMill
+  #   become: yes
+  #   git:
+  #     repo: https://github.com/tilemill-project/tilemill.git
+  #     dest: /usr/local/src/tilemill
+  #
+  # - name: Install dependencies for the TilMill
+  #   become: yes
+  #   shell: npm install
+  #   args:
+  #     chdir: /usr/local/src/tilemill
+  #
+  # - name: Place the config for the TileMill
+  #   template:
+  #     src: templates/tilemill.json
+  #     dest: "{{ ansible_env.HOME }}/.tilemill.json"
+  #
+  # - name: Start Tilemill as a server
+  #   shell: "pm2 -f  --name=tilemill start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json"
+  #   args:
+  #     chdir: /usr/local/src/tilemill
 
   handlers:
     - name: restart-apache
