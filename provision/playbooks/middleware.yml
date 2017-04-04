@@ -43,19 +43,6 @@
     postgresql_user:
       name: "{{ ansible_env.USER }}"
 
-  - name: Create a database `{{ db.name }}`
-    become: yes
-    become_user: postgres
-    postgresql_db:
-      name: "{{ db.name }}"
-      encoding: "{{ db.encoding }}"
-      owner: "{{ ansible_env.USER }}"
-
-  - name: Run setup PostgreSQL database
-    become: yes
-    become_user: postgres
-    shell: "psql -c \"CREATE EXTENSION IF NOT EXISTS hstore;\" -d gis && psql -c \"CREATE EXTENSION IF NOT EXISTS postgis;\" -d gis"
-
   # Installs mod_tile
   - name: Clone the `mod_tile`
     become: yes
@@ -196,11 +183,3 @@
     shell: "pm2 start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json --name=tilemill"
     args:
       chdir: /usr/local/src/tilemill
-
-  handlers:
-    - name: restart-apache
-      become: yes
-      action: service name=apache2 state=restarted
-    - name: restart-renderd
-      become: yes
-      action: service name=renderd state=restarted

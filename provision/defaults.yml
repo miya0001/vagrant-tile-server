@@ -29,7 +29,6 @@ packages:
   - unzip
 
 db:
-  name: gis
   encoding: UTF-8
 
 osm2pgsql:

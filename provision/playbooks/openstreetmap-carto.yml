@@ -5,8 +5,27 @@
     osm_carto:
       version: 3.1.0
     project_dir: "{{ files_dir }}/project"
+    db_name: osm_carto
 
   tasks:
+
+  - name: Create a database `{{ db.name }}`
+    become: yes
+    become_user: postgres
+    postgresql_db:
+      name: "{{ osm_carto }}"
+      encoding: "{{ db.encoding }}"
+      owner: "{{ ansible_env.USER }}"
+
+  - name: Run SQL `CREATE EXTENSION IF NOT EXISTS hstore;`
+    become: yes
+    become_user: postgres
+    shell: "psql -c \"CREATE EXTENSION IF NOT EXISTS hstore;\" -d {{ osm_carto }}"
+
+  - name: Run SQL `CREATE EXTENSION IF NOT EXISTS postgis;`
+    become: yes
+    become_user: postgres
+    shell: "psql -c \"CREATE EXTENSION IF NOT EXISTS postgis;\" -d {{ osm_carto }}"
 
   # OpenStreetMap Carto
   - name: Download & Unarchive openstreetmap-carto
@@ -40,11 +59,3 @@
     shell: "pm2 start kosmtik -- serve {{ project_dir }}/openstreetmap-carto-{{ osm_carto.version }}/project.mml --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
     args:
       chdir: "{{ ansible_env.HOME }}"
-
-  handlers:
-    - name: restart-apache
-      become: yes
-      action: service name=apache2 state=restarted
-    - name: restart-renderd
-      become: yes
-      action: service name=renderd state=restarted

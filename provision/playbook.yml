@@ -10,5 +10,13 @@
       group: "{{ ansible_env.USER }}"
       state: directory
 
+  handlers:
+    - name: restart-apache
+      become: yes
+      action: service name=apache2 state=restarted
+    - name: restart-renderd
+      become: yes
+      action: service name=renderd state=restarted
+
 - include: playbooks/middleware.yml
 - include: playbooks/openstreetmap-carto.yml
