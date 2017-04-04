@@ -4,7 +4,7 @@
   vars:
     osm_carto:
       version: 3.1.0
-    project_dir: "{{ files_dir }}/project/carto"
+    project_dir: "{{ files_dir }}/project/openstreetmap-carto"
 
   tasks:
 
@@ -12,10 +12,10 @@
   - name: Clone the openstreetmap-carto
     git:
       repo: https://github.com/gravitystorm/openstreetmap-carto.git
-      dest: /usr/local/src/tilemill
+      dest: "{{ project_dir }}"
 
   - name: Import the default data
-    shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ project_dir }}/openstreetmap-carto-{{ osm_carto.version }}/openstreetmap-carto.style {{ osm2pgsql.data }}"
+    shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ project_dir }}/openstreetmap-carto.style {{ osm2pgsql.data }}"
 
   - name: Generate a Mapnik Stylesheet
     become: yes
