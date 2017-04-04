@@ -41,4 +41,4 @@ kosmtik:
     lng: 135.77839851379397
     zoom: 14
 
-files_dir: /vagrant/projects
+files_dir: /vagrant/files

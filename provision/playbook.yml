@@ -3,9 +3,9 @@
 
   tasks:
 
-  - name: Create `/vagrant/projects_dir`
+  - name: Create `/vagrant/files`
     file:
-      path: "{{ projects_dir }}"
+      path: "{{ files_dir }}"
       owner: "{{ ansible_env.USER }}"
       group: "{{ ansible_env.USER }}"
       state: directory
