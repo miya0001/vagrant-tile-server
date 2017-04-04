@@ -25,10 +25,6 @@ Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-16.04"
   config.vm.box_check_update = true
 
-  if Vagrant.has_plugin?("vagrant-cachier")
-    config.cache.scope = :box
-  end
-
   if Vagrant.has_plugin?('vagrant-hostsupdater')
     config.vm.hostname = _conf['hostname']
   end
