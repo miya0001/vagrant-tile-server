@@ -5,10 +5,11 @@
 
   - name: Create `/vagrant/files`
     file:
-      path: "{{ files_dir }}"
+      path: "{{ files_dir }}/project"
       owner: "{{ ansible_env.USER }}"
       group: "{{ ansible_env.USER }}"
       state: directory
+      recurse: true
 
 - include: playbooks/middleware.yml
 - include: playbooks/openstreetmap-carto.yml

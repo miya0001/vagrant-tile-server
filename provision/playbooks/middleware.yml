@@ -44,6 +44,24 @@
     postgresql_user:
       name: "{{ ansible_env.USER }}"
 
+  - name: Create a database `{{ db.name }}`
+    become: yes
+    become_user: postgres
+    postgresql_db:
+      name: "{{ db.name }}"
+      encoding: "{{ db.encoding }}"
+      owner: "{{ ansible_env.USER }}"
+
+  - name: Run SQL `CREATE EXTENSION IF NOT EXISTS hstore;`
+    become: yes
+    become_user: postgres
+    shell: "psql -c \"CREATE EXTENSION IF NOT EXISTS hstore;\" -d {{ db.name }}"
+
+  - name: Run SQL `CREATE EXTENSION IF NOT EXISTS postgis;`
+    become: yes
+    become_user: postgres
+    shell: "psql -c \"CREATE EXTENSION IF NOT EXISTS postgis;\" -d {{ db.name }}"
+
   # Installs mod_tile
   - name: Clone the `mod_tile`
     become: yes
@@ -175,13 +193,13 @@
     args:
       chdir: /usr/local/src/tilemill
 
-  - name: Place the config for `tilemill`
+  - name: Place the config for the TileMill
     template:
       src: templates/tilemill.json
       dest: "{{ ansible_env.HOME }}/.tilemill.json"
 
-  - name: Start `kosmtic` as a server
-    shell: "pm2 start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json --name=tilemill"
+  - name: Start Tilemill as a server
+    shell: "pm2 -f start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json --name=tilemill"
     args:
       chdir: /usr/local/src/tilemill
 
