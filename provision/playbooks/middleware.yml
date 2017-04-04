@@ -43,6 +43,7 @@
     become_user: postgres
     postgresql_user:
       name: "{{ ansible_env.USER }}"
+      password: "{{ ansible_env.USER }}"
 
   - name: Create a database `{{ db.name }}`
     become: yes
