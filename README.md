@@ -45,28 +45,6 @@ Default values are in the `provision/defaults.yml`, you can overwrite them with 
 * User: vagrant
 * Database Name: gis
 
-## Customizing
-
-If you want to develop your own carto project, you can do it as follows.
-
-1. Place your own carto project (e.g,`my-carto`) into the same directory with `Vagrantfile`.
-2. Place `config.yml` in the same place as above.
-3. Run `vagrant provision`.
-
-Example of the `config.yml` is like following.
-
-```
-renderd:
-  xml: /vagrant/my-carto/style.xml
-
-kosmtik:
-  project: /vagrant/my-carto/project.mml
-  center:
-    lat: 33.47695002414991
-    lng: 135.77839851379397
-    zoom: 14
-```
-
 ### How to Import Your Data
 
 If you want to import your data of the OpenStreetMap, edit `config.yml` like following.
@@ -74,7 +52,6 @@ If you want to import your data of the OpenStreetMap, edit `config.yml` like fol
 ```
 osm2pgsql:
   data: /vagrant/provision/default.osm
-  style: /vagrant/openstreetmap-carto-3.1.0/openstreetmap-carto.style
 ```
 
 For more details, please see `provision/defaults.yml`.

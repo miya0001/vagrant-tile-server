@@ -37,6 +37,14 @@
       - restart-renderd
 
   - name: Start `kosmtic` as a server
-    shell: "pm2 start kosmtik -- serve {{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}/project.mml --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
+    shell: "pm2 kill && pm2 start kosmtik -- serve {{ osm_carto.path }}/openstreetmap-carto-{{ osm_carto.version }}/project.mml --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
     args:
       chdir: "{{ ansible_env.HOME }}"
+
+  handlers:
+    - name: restart-apache
+      become: yes
+      action: service name=apache2 state=restarted
+    - name: restart-renderd
+      become: yes
+      action: service name=renderd state=restarted
