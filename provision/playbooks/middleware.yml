@@ -199,7 +199,7 @@
       dest: "{{ ansible_env.HOME }}/.tilemill.json"
 
   - name: Start Tilemill as a server
-    shell: "pm2 -f start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json --name=tilemill"
+    shell: "pm2 -f  --name=tilemill start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json"
     args:
       chdir: /usr/local/src/tilemill
 
