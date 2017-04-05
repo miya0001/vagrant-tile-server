@@ -16,9 +16,17 @@
   - name: Import the default data
     shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ project_dir }}/openstreetmap-carto/openstreetmap-carto.style {{ osm2pgsql.data }}"
 
-  - name: Generate a Mapnik Stylesheet
+  - name: Run `./scripts/get-shapefiles.py`
     become: yes
-    shell: ./scripts/get-shapefiles.py && carto project.mml > style.xml
+    shell: ./scripts/get-shapefiles.py
+    args:
+      chdir: "{{ project_dir }}/openstreetmap-carto"
+    notify:
+      - restart-renderd
+
+  - name: Run `carto project.mml > style.xml`
+    become: yes
+    shell: carto project.mml > style.xml
     args:
       chdir: "{{ project_dir }}/openstreetmap-carto"
     notify:
