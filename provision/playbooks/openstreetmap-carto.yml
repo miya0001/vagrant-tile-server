@@ -12,6 +12,7 @@
     git:
       repo: https://github.com/gravitystorm/openstreetmap-carto.git
       dest: "{{ project_dir }}/openstreetmap-carto"
+      update: no
 
   - name: Import the default data
     shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ project_dir }}/openstreetmap-carto/openstreetmap-carto.style {{ osm2pgsql.data }}"
@@ -31,6 +32,13 @@
       chdir: "{{ project_dir }}/openstreetmap-carto"
     notify:
       - restart-renderd
+
+  - name: "Create symlink into `{{ ansible_env.HOME }}/tilemill/project/openstreetmap-carto`"
+    become: yes
+    file:
+      src: "{{ project_dir }}/openstreetmap-carto"
+      path: "{{ ansible_env.HOME }}/tilemill/project/openstreetmap-carto"
+      state: link
 
   - name: Setup renderd
     become: yes
