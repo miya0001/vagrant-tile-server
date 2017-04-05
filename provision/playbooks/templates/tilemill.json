@@ -1,5 +1,5 @@
 {
-  "files": "{{ files_dir }}",
+  "files": "{{ tilemill_dir }}",
   "listenHost": "0.0.0.0",
   "coreUrl": "{{ ip }}:20009",
   "tileUrl": "{{ ip }}:20008",

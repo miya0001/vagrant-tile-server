@@ -4,7 +4,6 @@
   vars:
     osm_carto:
       version: 3.1.0
-    project_dir: "{{ files_dir }}/project/openstreetmap-carto"
 
   tasks:
 
@@ -12,16 +11,16 @@
   - name: Clone the openstreetmap-carto
     git:
       repo: https://github.com/gravitystorm/openstreetmap-carto.git
-      dest: "{{ project_dir }}"
+      dest: "{{ project_dir }}/openstreetmap-carto"
 
   - name: Import the default data
-    shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ project_dir }}/openstreetmap-carto.style {{ osm2pgsql.data }}"
+    shell: "osm2pgsql --slim -d gis -C 3600 --cache {{ memory * 0.5 }} --hstore -S {{ project_dir }}/openstreetmap-carto/openstreetmap-carto.style {{ osm2pgsql.data }}"
 
   - name: Generate a Mapnik Stylesheet
     become: yes
     shell: ./scripts/get-shapefiles.py && carto project.mml > style.xml
     args:
-      chdir: "{{ project_dir }}"
+      chdir: "{{ project_dir }}/openstreetmap-carto"
     notify:
       - restart-renderd
 
@@ -30,12 +29,12 @@
     replace:
       dest: /usr/local/etc/renderd.conf
       regexp: ^XML=.*
-      replace: "XML={{ project_dir }}/style.xml"
+      replace: "XML={{ project_dir }}/openstreetmap-carto/style.xml"
     notify:
       - restart-renderd
 
   - name: Start `kosmtic` as a server
-    shell: "pm2 -f start kosmtik -- serve {{ project_dir }}/project.mml --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
+    shell: "pm2 -f start kosmtik -- serve {{ project_dir }}/openstreetmap-carto/project.mml --host=0.0.0.0 --localconfig={{ ansible_env.HOME }}/.kosmtik.json"
     args:
       chdir: "{{ ansible_env.HOME }}"
 
