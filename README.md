@@ -46,17 +46,6 @@ Default values are in the `provision/defaults.yml`, you can overwrite them with 
 * User: vagrant
 * Database Name: gis
 
-### How to Import Your Data
-
-If you want to import your data of the OpenStreetMap, edit `config.yml` like following.
-
-```
-osm2pgsql:
-  data: /vagrant/provision/default.osm
-```
-
-For more details, please see `provision/defaults.yml`.
-
 ## Automated Testing
 
 Run following after `vagrant up`.
