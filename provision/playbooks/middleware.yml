@@ -197,13 +197,18 @@
     args:
       chdir: /usr/local/src/tilemill
 
+  - name: Create `/var/lib/mod_tile`
+    file:
+      path: "{{ ansible_env.HOME }}/.tilemill"
+      state: directory
+
   - name: Place the config for the TileMill
     template:
       src: templates/tilemill.json
-      dest: "{{ ansible_env.HOME }}/.tilemill.json"
+      dest: "{{ ansible_env.HOME }}/.tilemill/config.json"
 
   - name: Start Tilemill as a server
-    shell: "pm2 -f  --name=tilemill start index.js -- --config={{ ansible_env.HOME }}/.tilemill.json"
+    shell: "pm2 -f  --name=tilemill start index.js"
     args:
       chdir: /usr/local/src/tilemill
 
